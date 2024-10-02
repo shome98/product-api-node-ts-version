@@ -90,4 +90,11 @@ eventEmitter.on("deleteData", async (id: number) => {
 
 // Create server and handle different routes
 const server = http.createServer(
-    async (req: IncomingMessage, res: ServerResponse) => { })
+    async (req: IncomingMessage, res: ServerResponse) => { 
+        try {
+            
+        } catch (error) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
+        }
+    })
