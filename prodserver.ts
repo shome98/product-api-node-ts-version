@@ -76,3 +76,14 @@ eventEmitter.on("updateData", async (updatedData: DataItem) => {
     console.error("Error updating data: ", error);
   }
 });
+
+//Event handling for delete
+eventEmitter.on("deleteData", async (id: number) => {
+  try {
+    let data = await readDataFromFile();
+    data = data.filter((item) => item.id !== id);
+    await writeDataToFile(data);
+  } catch (error) {
+    console.error("Error deleting data: ", error);
+  }
+});
