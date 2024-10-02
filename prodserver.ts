@@ -95,6 +95,16 @@ const server = http.createServer(
             const url = parse(req.url || "", true);
             const id = parseInt(url.pathname?.split("/")[2] || "0", 10);
 
+            // POST /data – Add a new item
+            if (req.method === "POST" && url.pathname === "/data") {
+             const body = await getRequestBody(req);
+             const newData: DataItem = { ...JSON.parse(body), id: Date.now() };
+             eventEmitter.emit("saveData", newData);
+             res.writeHead(201, { "Content-Type": "application/json" });
+             res.end(JSON.stringify({ message: "Data Saved", data: newData }));
+            }
+
+            
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
