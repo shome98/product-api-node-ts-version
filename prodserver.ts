@@ -168,6 +168,13 @@ const server = http.createServer(
               res.end(JSON.stringify(data));
             }
 
+            // DELETE /data/:id – Delete an item by ID
+            else if (req.method === "DELETE" && url.pathname?.startsWith("/data/")) {
+              eventEmitter.emit("deleteData", id);
+              res.writeHead(204, { "Content-Type": "application/json" });
+              res.end();
+            }
+
 
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
