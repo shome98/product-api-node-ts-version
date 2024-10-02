@@ -11,3 +11,12 @@ interface DataItem {
   id: number;
   [key: string]: any;
 }
+
+// Helper function to check if the data file exists or not
+const ensureDataFileExists = async (): Promise<void> => {
+  try {
+    await fs.promises.access(DATA_FILE, fs.constants.F_OK);
+  } catch (error) {
+    await fs.promises.writeFile(DATA_FILE, JSON.stringify([]));
+  }
+};
