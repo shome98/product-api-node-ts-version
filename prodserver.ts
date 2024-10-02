@@ -118,6 +118,15 @@ const server = http.createServer(
               );
             }
 
+            // PUT /data/:id – Update an item by ID
+            else if (req.method === "PUT" && url.pathname?.startsWith("/data/")) {
+              const body = await getRequestBody(req);
+              const updatedData: DataItem = { ...JSON.parse(body), id };
+              eventEmitter.emit("updateData", updatedData);
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ message: "Data updated", data: updatedData }));
+            }
+
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
