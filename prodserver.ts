@@ -90,100 +90,100 @@ eventEmitter.on("deleteData", async (id: number) => {
 
 // Create server and handle different routes
 const server = http.createServer(
-    async (req: IncomingMessage, res: ServerResponse) => { 
+    async (req: IncomingMessage, res: ServerResponse) => {
         try {
             const url = parse(req.url || "", true);
             const id = parseInt(url.pathname?.split("/")[2] || "0", 10);
 
             // POST /data – Add a new item
             if (req.method === "POST" && url.pathname === "/data") {
-             const body = await getRequestBody(req);
-             const newData: DataItem = { ...JSON.parse(body), id: Date.now() };
-             eventEmitter.emit("saveData", newData);
-             res.writeHead(201, { "Content-Type": "application/json" });
-             res.end(JSON.stringify({ message: "Data Saved", data: newData }));
+                const body = await getRequestBody(req);
+                const newData: DataItem = { ...JSON.parse(body), id: Date.now() };
+                eventEmitter.emit("saveData", newData);
+                res.writeHead(201, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ message: "Data Saved", data: newData }));
             }
 
             // POST /data/multiple – Add multiple items at once
             else if (req.method === "POST" && url.pathname === "/data/multiple") {
-              const body = await getRequestBody(req);
-              const newItems: DataItem[] = JSON.parse(body).map((item: any) => ({
-                ...item,
-                id: Date.now() + Math.floor(Math.random() * 10000),
-              }));
-              newItems.forEach((item) => eventEmitter.emit("saveData", item));
-              res.writeHead(201, { "Content-Type": "application/json" });
-              res.end(
-                JSON.stringify({ message: "Multiple Data Saved", data: newItems })
-              );
+                const body = await getRequestBody(req);
+                const newItems: DataItem[] = JSON.parse(body).map((item: any) => ({
+                    ...item,
+                    id: Date.now() + Math.floor(Math.random() * 10000),
+                }));
+                newItems.forEach((item) => eventEmitter.emit("saveData", item));
+                res.writeHead(201, { "Content-Type": "application/json" });
+                res.end(
+                    JSON.stringify({ message: "Multiple Data Saved", data: newItems })
+                );
             }
 
             // PUT /data/:id – Update an item by ID
             else if (req.method === "PUT" && url.pathname?.startsWith("/data/")) {
-              const body = await getRequestBody(req);
-              const updatedData: DataItem = { ...JSON.parse(body), id };
-              eventEmitter.emit("updateData", updatedData);
-              res.writeHead(200, { "Content-Type": "application/json" });
-              res.end(JSON.stringify({ message: "Data updated", data: updatedData }));
+                const body = await getRequestBody(req);
+                const updatedData: DataItem = { ...JSON.parse(body), id };
+                eventEmitter.emit("updateData", updatedData);
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ message: "Data updated", data: updatedData }));
             }
 
             // PATCH /data/:id – Partially update an item by ID
             else if (req.method === "PATCH" && url.pathname?.startsWith("/data/")) {
-              const body = await getRequestBody(req);
-              const data = await readDataFromFile();
-              const index = data.findIndex((item) => item.id === id);
-              if (index !== -1) {
-                data[index] = { ...data[index], ...JSON.parse(body) };
-                await writeDataToFile(data);
-                res.writeHead(200, { "Content-Type": "application/json" });
-                res.end(
-                  JSON.stringify({
-                    message: "Data partially updated",
-                    data: data[index],
-                  })
-                );
-              } else {
-                res.writeHead(404, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ message: "Data not found" }));
-              }
+                const body = await getRequestBody(req);
+                const data = await readDataFromFile();
+                const index = data.findIndex((item) => item.id === id);
+                if (index !== -1) {
+                    data[index] = { ...data[index], ...JSON.parse(body) };
+                    await writeDataToFile(data);
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.end(
+                        JSON.stringify({
+                            message: "Data partially updated",
+                            data: data[index],
+                        })
+                    );
+                } else {
+                    res.writeHead(404, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify({ message: "Data not found" }));
+                }
             }
 
             // GET /data/:id – Retrieve a single item by ID
             else if (req.method === "GET" && url.pathname?.startsWith("/data/")) {
-              const data = await readDataFromFile();
-              const item = data.find((d) => d.id === id);
-              if (item) {
-                res.writeHead(200, { "Content-Type": "application/json" });
-                res.end(JSON.stringify(item));
-              } else {
-                res.writeHead(404, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ message: "Data not found" }));
-              }
+                const data = await readDataFromFile();
+                const item = data.find((d) => d.id === id);
+                if (item) {
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify(item));
+                } else {
+                    res.writeHead(404, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify({ message: "Data not found" }));
+                }
             }
 
             // GET /data – Retrieve all items
             else if (req.method === "GET" && url.pathname === "/data") {
-              const data = await readDataFromFile();
-              res.writeHead(200, { "Content-Type": "application/json" });
-              res.end(JSON.stringify(data));
+                const data = await readDataFromFile();
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify(data));
             }
 
             // DELETE /data/:id – Delete an item by ID
             else if (req.method === "DELETE" && url.pathname?.startsWith("/data/")) {
-              eventEmitter.emit("deleteData", id);
-              res.writeHead(204, { "Content-Type": "application/json" });
-              res.end();
+                eventEmitter.emit("deleteData", id);
+                res.writeHead(204, { "Content-Type": "application/json" });
+                res.end();
             }
 
             // If route is not found
             else {
-              res.writeHead(404, { "Content-Type": "application/json" });
-              res.end(JSON.stringify({ message: "Route not found" }));
+                res.writeHead(404, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ message: "Route not found" }));
             }
 
 
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
+            res.end(JSON.stringify({ message: "Internal server error", error: error.message, }));
         }
-    })
+    });
