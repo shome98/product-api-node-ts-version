@@ -6,4 +6,8 @@ import { parse } from "url";
 const eventEmitter = new EventEmitter();
 const DATA_FILE = "data.json";
 
-console.log("print")
+// Define an interface for the data item
+interface DataItem {
+  id: number;
+  [key: string]: any;
+}
