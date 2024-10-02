@@ -51,3 +51,14 @@ const getRequestBody = (req: IncomingMessage): Promise<string> => {
     req.on("error", (err) => reject(err));
   });
 };
+
+// Event handling for save
+eventEmitter.on("saveData", async (newData: DataItem) => {
+  try {
+    const data = await readDataFromFile();
+    data.push(newData);
+    await writeDataToFile(data);
+  } catch (error) {
+    console.error("Error saving data: ", error);
+  }
+});
