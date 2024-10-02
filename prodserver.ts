@@ -104,7 +104,20 @@ const server = http.createServer(
              res.end(JSON.stringify({ message: "Data Saved", data: newData }));
             }
 
-            
+            // POST /data/multiple – Add multiple items at once
+            else if (req.method === "POST" && url.pathname === "/data/multiple") {
+              const body = await getRequestBody(req);
+              const newItems: DataItem[] = JSON.parse(body).map((item: any) => ({
+                ...item,
+                id: Date.now() + Math.floor(Math.random() * 10000),
+              }));
+              newItems.forEach((item) => eventEmitter.emit("saveData", item));
+              res.writeHead(201, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({ message: "Multiple Data Saved", data: newItems })
+              );
+            }
+
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
