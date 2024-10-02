@@ -32,3 +32,12 @@ const readDataFromFile = async (): Promise<DataItem[]> => {
     return [];
   }
 };
+
+// Writes data to the file
+const writeDataToFile = async (data: DataItem[]): Promise<void> => {
+  try {
+    await fs.promises.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error("Error writing data file: ", error);
+  }
+};
