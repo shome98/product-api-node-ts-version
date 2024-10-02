@@ -148,6 +148,20 @@ const server = http.createServer(
               }
             }
 
+            // GET /data/:id – Retrieve a single item by ID
+            else if (req.method === "GET" && url.pathname?.startsWith("/data/")) {
+              const data = await readDataFromFile();
+              const item = data.find((d) => d.id === id);
+              if (item) {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify(item));
+              } else {
+                res.writeHead(404, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ message: "Data not found" }));
+              }
+            }
+
+
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
