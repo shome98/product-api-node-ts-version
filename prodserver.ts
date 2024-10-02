@@ -187,3 +187,9 @@ const server = http.createServer(
             res.end(JSON.stringify({ message: "Internal server error", error: error.message, }));
         }
     });
+
+// Start the server
+const PORT = 4789;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
