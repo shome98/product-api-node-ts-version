@@ -92,7 +92,9 @@ eventEmitter.on("deleteData", async (id: number) => {
 const server = http.createServer(
     async (req: IncomingMessage, res: ServerResponse) => { 
         try {
-            
+            const url = parse(req.url || "", true);
+            const id = parseInt(url.pathname?.split("/")[2] || "0", 10);
+
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
