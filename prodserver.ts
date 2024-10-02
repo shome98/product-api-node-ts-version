@@ -175,6 +175,12 @@ const server = http.createServer(
               res.end();
             }
 
+            // If route is not found
+            else {
+              res.writeHead(404, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ message: "Route not found" }));
+            }
+
 
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
