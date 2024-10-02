@@ -1,6 +1,6 @@
-import http, { IncomingMessage, ServerResponse } from "http";
+import  { createServer,IncomingMessage, ServerResponse } from "http";
 import { EventEmitter } from "events";
-import fs from "fs";
+import * as fs from "fs";
 import { parse } from "url";
 
 const eventEmitter = new EventEmitter();
@@ -89,7 +89,7 @@ eventEmitter.on("deleteData", async (id: number) => {
 });
 
 // Create server and handle different routes
-const server = http.createServer(
+const server = createServer(
     async (req: IncomingMessage, res: ServerResponse) => {
         try {
             const url = parse(req.url || "", true);
