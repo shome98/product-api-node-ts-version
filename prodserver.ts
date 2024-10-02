@@ -127,6 +127,27 @@ const server = http.createServer(
               res.end(JSON.stringify({ message: "Data updated", data: updatedData }));
             }
 
+            // PATCH /data/:id – Partially update an item by ID
+            else if (req.method === "PATCH" && url.pathname?.startsWith("/data/")) {
+              const body = await getRequestBody(req);
+              const data = await readDataFromFile();
+              const index = data.findIndex((item) => item.id === id);
+              if (index !== -1) {
+                data[index] = { ...data[index], ...JSON.parse(body) };
+                await writeDataToFile(data);
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(
+                  JSON.stringify({
+                    message: "Data partially updated",
+                    data: data[index],
+                  })
+                );
+              } else {
+                res.writeHead(404, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ message: "Data not found" }));
+              }
+            }
+
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
             res.end(JSON.stringify({message: "Internal server error",error: error.message,}));
