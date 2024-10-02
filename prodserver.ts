@@ -161,6 +161,13 @@ const server = http.createServer(
               }
             }
 
+            // GET /data – Retrieve all items
+            else if (req.method === "GET" && url.pathname === "/data") {
+              const data = await readDataFromFile();
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(JSON.stringify(data));
+            }
+
 
         } catch (error) {
             res.writeHead(500, { "Content-Type": "application/json" });
