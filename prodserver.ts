@@ -20,3 +20,15 @@ const ensureDataFileExists = async (): Promise<void> => {
     await fs.promises.writeFile(DATA_FILE, JSON.stringify([]));
   }
 };
+
+// Reads data from the file
+const readDataFromFile = async (): Promise<DataItem[]> => {
+  try {
+    await ensureDataFileExists();
+    const data = await fs.promises.readFile(DATA_FILE, "utf8");
+    return JSON.parse(data) as DataItem[];
+  } catch (error) {
+    console.error("Error reading data file: ", error);
+    return [];
+  }
+};
