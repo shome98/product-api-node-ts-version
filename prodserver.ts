@@ -87,3 +87,7 @@ eventEmitter.on("deleteData", async (id: number) => {
     console.error("Error deleting data: ", error);
   }
 });
+
+// Create server and handle different routes
+const server = http.createServer(
+    async (req: IncomingMessage, res: ServerResponse) => { })
