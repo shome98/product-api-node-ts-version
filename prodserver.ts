@@ -62,3 +62,17 @@ eventEmitter.on("saveData", async (newData: DataItem) => {
     console.error("Error saving data: ", error);
   }
 });
+
+// Event handling for update
+eventEmitter.on("updateData", async (updatedData: DataItem) => {
+  try {
+    const data = await readDataFromFile();
+    const index = data.findIndex((item) => item.id === updatedData.id);
+    if (index !== -1) {
+      data[index] = updatedData;
+      await writeDataToFile(data);
+    }
+  } catch (error) {
+    console.error("Error updating data: ", error);
+  }
+});
